@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <div class="container">
+    <div class="row">
+      <div class="col-2">
+        <a class="navbar-brand" href="#">Dating App</a>
+      </div>
+      <div class="col-4">
+        <div class="row" *ngIf="accountService.currentUserSource$ | async">
+          <ul class="navbar-nav me-auto ml-5 mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Lists</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">Messages</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="container">
+          <div class="row text-align:right">
+            <div class="col">
+              <form #loginForm="ngForm" class="form-inline pt-3" role="form" (ngSubmit)="login()" autocomplete="off">
+                <div class="input-group input-group-sm mb-3 form-inline"
+                  *ngIf="(accountService.currentUserSource$| async)===null">
+                  <input type="text" class="form-control" placeholder="Username" name="username"
+                    [(ngModel)]="model.userName" aria-label="Recipient's username with two button addons"
+                    aria-describedby="button-addon4">
+                  <input type="password" class="form-control" placeholder="Password" name="password"
+                    [(ngModel)]="model.password" aria-label="Recipient's username with two button addons"
+                    aria-describedby="button-addon4">
+                  <div class="input-group-append" id="button-addon4">
+                    <button class="btn btn-outline-success" type="submit">Login</button>
+                  </div>
+                </div>
+                <div class="dropdown" *ngIf="accountService.currentUserSource$| async" dropdown>
+                  <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{model.userName}}</a>
+                  <div class="dropdown-menu mt-3" *dropdownMenu>
+                    <a class="dropdown-item">Edit Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" (click)="logout()">Logout</a>
+                  </div>
+                </div>
+                <button class="btn btn-outline-success" type="submit" *ngIf="accountService.currentUserSource$| async"
+                  (click)="logout()">Logout</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

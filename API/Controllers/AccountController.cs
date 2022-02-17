@@ -30,10 +30,10 @@ namespace API.Controllers
         {
             using var hmac = new HMACSHA512();
 
-            if (await this.UserExists(registerDto.Username)) return BadRequest("User already Exists!");
+            if (await this.UserExists(registerDto.UserName)) return BadRequest("User already Exists!");
             AppUser user = new AppUser()
             {
-                UserName = registerDto.Username.ToLower(),
+                UserName = registerDto.UserName.ToLower(),
                 PasswordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
@@ -42,7 +42,7 @@ namespace API.Controllers
             await _context.SaveChangesAsync();
         
              return new AuthorizedDto() {
-                Username = user.UserName,
+                UserName = user.UserName,
                 Token = _token.CreateToken(user)              
             };
         }
@@ -50,7 +50,7 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthorizedDto>> Login (LoginDto loginDto)
         {
-            var user = await  _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+            var user = await  _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
             if (user == null)
                 return BadRequest("Bad Username!");
 
@@ -60,7 +60,7 @@ namespace API.Controllers
                 return BadRequest("Bad Password!");
             
             return new AuthorizedDto() {
-                Username = user.UserName,
+                UserName = user.UserName,
                 Token = _token.CreateToken(user)              
             };
         }
